@@ -37,11 +37,11 @@ Future<HeroResponse> allHeroes(String sortBy) async {
     if (response.statusCode == 200) {
       heroResponse = HeroResponse.fromJson(jsonDecode(response.body));
       } else {
-        print("search failed");
+        print("retrieve all heroes failed");
         heroResponse = HeroResponse(status: "404", heroesList: []);
       }
   }).catchError((e) {
-    print("search failed");
+    print("retrieve all heroes failed");
     heroResponse = HeroResponse(status: "404", heroesList: []);
   });
   return heroResponse;
