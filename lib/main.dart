@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:heros/models/hero_model.dart';
+import 'package:heros/screens/hero_screen.dart';
 import 'package:heros/services/heroes_api.dart' as api;
 
 void main() {
@@ -139,166 +140,169 @@ class _MyHomePageState extends State<MyHomePage> {
             padding: const EdgeInsets.all(8),
             itemCount: heroes.length,
             itemBuilder: (BuildContext context, int index) {
-              return Card(
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(child: Container(
-                          decoration: const BoxDecoration(
-                            border: Border(
-                              bottom: BorderSide(
-                                width: 3,
-                              ),
-                              left: BorderSide(
-                                width: 1,
-                              ),
-                              right: BorderSide(
-                                width: 1,
-                              ),
-                              top: BorderSide(
-                                width: 1,
-                              ),
-                            )
-                          ),
-                          child: const Text("Hero Name",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+              return InkWell(
+                onTap: () => Navigator.push( context, MaterialPageRoute( builder: (context) => HeroScreen( hero: heroes[index]) ), ),
+                child: Card(
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(child: Container(
+                            decoration: const BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(
+                                  width: 3,
                                 ),
-                          ),
-                        ),
-                        Expanded(child: Container(
-                          decoration: const BoxDecoration(
-                            border: Border(
-                              bottom: BorderSide(
-                                width: 3,
-                              ),
-                              left: BorderSide(
-                                width: 1,
-                              ),
-                              right: BorderSide(
-                                width: 1,
-                              ),
-                              top: BorderSide(
-                                width: 1,
-                              ),
-                            )
-                          ),
-                          child: Text(heroes[index].name!,
-                                  style: const TextStyle(fontWeight: FontWeight.bold),
+                                left: BorderSide(
+                                  width: 1,
                                 ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(child: Container(
-                          decoration: const BoxDecoration(
-                            border: Border(
-                              bottom: BorderSide(
-                                width: 3,
-                              ),
-                              left: BorderSide(
-                                width: 1,
-                              ),
-                              right: BorderSide(
-                                width: 1,
-                              ),
-                              top: BorderSide(
-                                width: 1,
-                              ),
-                            )
-                          ),
-                          child: const Text("Powers",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                right: BorderSide(
+                                  width: 1,
                                 ),
-                          ),
-                        ),
-                        Expanded(child: Container(
-                          decoration: const BoxDecoration(
-                            border: Border(
-                              bottom: BorderSide(
-                                width: 3,
-                              ),
-                              left: BorderSide(
-                                width: 1,
-                              ),
-                              right: BorderSide(
-                                width: 1,
-                              ),
-                              top: BorderSide(
-                                width: 1,
-                              ),
-                            )
-                          ),
-                          child: Text(heroes[index].powers!,
-                                  style: const TextStyle(fontWeight: FontWeight.bold),
+                                top: BorderSide(
+                                  width: 1,
                                 ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(child: Container(
-                          decoration: const BoxDecoration(
-                            border: Border(
-                              bottom: BorderSide(
-                                width: 1,
-                              ),
-                              left: BorderSide(
-                                width: 1,
-                              ),
-                              right: BorderSide(
-                                width: 1,
-                              ),
-                              top: BorderSide(
-                                width: 1,
-                              ),
-                            )
-                          ),
-                          child: const Text("Rate",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                          ),
-                        ),
-                        Expanded(child: Container(
-                          decoration: const BoxDecoration(
-                            border: Border(
-                              bottom: BorderSide(
-                                width: 1,
-                              ),
-                              left: BorderSide(
-                                width: 1,
-                              ),
-                              right: BorderSide(
-                                width: 1,
-                              ),
-                              top: BorderSide(
-                                width: 1,
-                              ),
-                            )
-                          ),
-                          child: SizedBox(
-                            width:100,
-                            child: Row(
-                              children: [
-                                Icon(Icons.star_rate_rounded, color: heroes[index].rate!>0 ? Colors.purple : Colors.grey,),
-                                Icon(Icons.star_rate_rounded, color: heroes[index].rate!>1 ? Colors.purple : Colors.grey,),
-                                Icon(Icons.star_rate_rounded, color: heroes[index].rate!>2 ? Colors.purple : Colors.grey,),
-                                Icon(Icons.star_rate_rounded, color: heroes[index].rate!>3 ? Colors.purple : Colors.grey,),
-                                Icon(Icons.star_rate_rounded, color: heroes[index].rate!>4 ? Colors.purple : Colors.grey,)
-                              ],
+                              )
+                            ),
+                            child: const Text("Hero Name",
+                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                  ),
                             ),
                           ),
+                          Expanded(child: Container(
+                            decoration: const BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(
+                                  width: 3,
+                                ),
+                                left: BorderSide(
+                                  width: 1,
+                                ),
+                                right: BorderSide(
+                                  width: 1,
+                                ),
+                                top: BorderSide(
+                                  width: 1,
+                                ),
+                              )
+                            ),
+                            child: Text(heroes[index].name!,
+                                    style: const TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(child: Container(
+                            decoration: const BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(
+                                  width: 3,
+                                ),
+                                left: BorderSide(
+                                  width: 1,
+                                ),
+                                right: BorderSide(
+                                  width: 1,
+                                ),
+                                top: BorderSide(
+                                  width: 1,
+                                ),
+                              )
+                            ),
+                            child: const Text("Powers",
+                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                            ),
+                          ),
+                          Expanded(child: Container(
+                            decoration: const BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(
+                                  width: 3,
+                                ),
+                                left: BorderSide(
+                                  width: 1,
+                                ),
+                                right: BorderSide(
+                                  width: 1,
+                                ),
+                                top: BorderSide(
+                                  width: 1,
+                                ),
+                              )
+                            ),
+                            child: Text(heroes[index].powers!,
+                                    style: const TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(child: Container(
+                            decoration: const BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(
+                                  width: 1,
+                                ),
+                                left: BorderSide(
+                                  width: 1,
+                                ),
+                                right: BorderSide(
+                                  width: 1,
+                                ),
+                                top: BorderSide(
+                                  width: 1,
+                                ),
+                              )
+                            ),
+                            child: const Text("Rate",
+                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                            ),
+                          ),
+                          Expanded(child: Container(
+                            decoration: const BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(
+                                  width: 1,
+                                ),
+                                left: BorderSide(
+                                  width: 1,
+                                ),
+                                right: BorderSide(
+                                  width: 1,
+                                ),
+                                top: BorderSide(
+                                  width: 1,
+                                ),
+                              )
+                            ),
+                            child: SizedBox(
+                              width:100,
+                              child: Row(
+                                children: [
+                                  Icon(Icons.star_rate_rounded, color: heroes[index].rate!>0 ? Colors.purple : Colors.grey,),
+                                  Icon(Icons.star_rate_rounded, color: heroes[index].rate!>1 ? Colors.purple : Colors.grey,),
+                                  Icon(Icons.star_rate_rounded, color: heroes[index].rate!>2 ? Colors.purple : Colors.grey,),
+                                  Icon(Icons.star_rate_rounded, color: heroes[index].rate!>3 ? Colors.purple : Colors.grey,),
+                                  Icon(Icons.star_rate_rounded, color: heroes[index].rate!>4 ? Colors.purple : Colors.grey,)
+                                ],
+                              ),
+                            ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               );
             }
