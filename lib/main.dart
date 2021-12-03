@@ -38,6 +38,31 @@ class _MyHomePageState extends State<MyHomePage> {
   bool sortByPower = false;
   List<HeroModel> heroes = [];
 
+  @override
+  void initState() {
+    super.initState();
+    retreiveAllHeroes();
+  }
+  
+  retreiveAllHeroes() async {
+    try {
+      heroes.clear();
+      HeroResponse searchResponse = (await api.allHeroes(sortByPower? "power" : "name"));
+      print("status: " + searchResponse.status! );
+      if (searchResponse.status == "200") {
+        print("heroes: " + searchResponse.heroesList!.toString() ); 
+        setState(() {
+          heroes = searchResponse.heroesList!;
+        });
+      }
+    } catch (e) {
+      print(e.toString());
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text("Ops, something went wrong!"),
+      ));
+    }
+  }
+
   collaplse(){
     setState(() {
       collapseFilter = !collapseFilter; 
@@ -75,239 +100,243 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Column(
-        
-        children: [
-          Card(
-            child: Column(children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  const Text("Filters: ", 
-                   style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  IconButton(onPressed: collaplse, icon: const Icon(Icons.filter)),
-                ],
-              ),
-              collapseFilter? 
-              Container(
-                padding: const EdgeInsets.all(10),
-                child: Column(
-                  children: [
-                    TextFormField(
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: 'Search',
-                        hintStyle: TextStyle(
-                          color: Colors.grey,
-                        ),
-                        icon: Icon(Icons.search),
-                      ),
-                      keyboardType: TextInputType.text,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return "Please enter an app name";
-                        }
-                        return null;
-                      },
-                      textInputAction: TextInputAction.done,
-                      onFieldSubmitted: (_) => search,
-                      onSaved: (value) {
-                        heroSearchText = value!.trim().toLowerCase();
-                      },
-                    ),
-                    Row(
-                      children: [
-                        const Text("Sort By Power"),
-                        Checkbox(
-                          value: sortByPower,
-                          onChanged: (value) {
-                            //formFieldState.didChange(value);
-                            setState(() {
-                              sortByPower = value!;
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ) : const SizedBox(),
-            ]  
-            ),
-          ),
-          ListView.builder(
-            padding: const EdgeInsets.all(8),
-            itemCount: heroes.length,
-            itemBuilder: (BuildContext context, int index) {
-              return InkWell(
-                onTap: () => Navigator.push( context, MaterialPageRoute( builder: (context) => HeroScreen( hero: heroes[index]) ), ),
-                child: Card(
-                  child: Column(
+      body: Padding(
+        padding: const EdgeInsets.all(30),
+        child: Column(
+          
+          children: [
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(child: Container(
-                            decoration: const BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                  width: 3,
-                                ),
-                                left: BorderSide(
-                                  width: 1,
-                                ),
-                                right: BorderSide(
-                                  width: 1,
-                                ),
-                                top: BorderSide(
-                                  width: 1,
-                                ),
-                              )
-                            ),
-                            child: const Text("Hero Name",
-                                    style: TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                            ),
+                      const Text("Filters: ", 
+                       style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      IconButton(onPressed: collaplse, icon: collapseFilter ? const Icon( Icons.arrow_drop_up_outlined ) :  const Icon( Icons.arrow_drop_down)),
+                    ],
+                  ),
+                  collapseFilter? 
+                  Column(
+                    children: [
+                      TextFormField(
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          hintText: 'Search',
+                          hintStyle: TextStyle(
+                            color: Colors.grey,
                           ),
-                          Expanded(child: Container(
-                            decoration: const BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                  width: 3,
-                                ),
-                                left: BorderSide(
-                                  width: 1,
-                                ),
-                                right: BorderSide(
-                                  width: 1,
-                                ),
-                                top: BorderSide(
-                                  width: 1,
-                                ),
-                              )
-                            ),
-                            child: Text(heroes[index].name!,
-                                    style: const TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                            ),
-                          ),
-                        ],
+                          icon: Icon(Icons.search),
+                        ),
+                        keyboardType: TextInputType.text,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return "Please enter an app name";
+                          }
+                          return null;
+                        },
+                        textInputAction: TextInputAction.done,
+                        onFieldSubmitted: (_) => search,
+                        onSaved: (value) {
+                          heroSearchText = value!.trim().toLowerCase();
+                        },
                       ),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Expanded(child: Container(
-                            decoration: const BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                  width: 3,
-                                ),
-                                left: BorderSide(
-                                  width: 1,
-                                ),
-                                right: BorderSide(
-                                  width: 1,
-                                ),
-                                top: BorderSide(
-                                  width: 1,
-                                ),
-                              )
-                            ),
-                            child: const Text("Powers",
-                                    style: TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                            ),
-                          ),
-                          Expanded(child: Container(
-                            decoration: const BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                  width: 3,
-                                ),
-                                left: BorderSide(
-                                  width: 1,
-                                ),
-                                right: BorderSide(
-                                  width: 1,
-                                ),
-                                top: BorderSide(
-                                  width: 1,
-                                ),
-                              )
-                            ),
-                            child: Text(heroes[index].powers!,
-                                    style: const TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(child: Container(
-                            decoration: const BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                  width: 1,
-                                ),
-                                left: BorderSide(
-                                  width: 1,
-                                ),
-                                right: BorderSide(
-                                  width: 1,
-                                ),
-                                top: BorderSide(
-                                  width: 1,
-                                ),
-                              )
-                            ),
-                            child: const Text("Rate",
-                                    style: TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                            ),
-                          ),
-                          Expanded(child: Container(
-                            decoration: const BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                  width: 1,
-                                ),
-                                left: BorderSide(
-                                  width: 1,
-                                ),
-                                right: BorderSide(
-                                  width: 1,
-                                ),
-                                top: BorderSide(
-                                  width: 1,
-                                ),
-                              )
-                            ),
-                            child: SizedBox(
-                              width:100,
-                              child: Row(
-                                children: [
-                                  Icon(Icons.star_rate_rounded, color: heroes[index].rate!>0 ? Colors.purple : Colors.grey,),
-                                  Icon(Icons.star_rate_rounded, color: heroes[index].rate!>1 ? Colors.purple : Colors.grey,),
-                                  Icon(Icons.star_rate_rounded, color: heroes[index].rate!>2 ? Colors.purple : Colors.grey,),
-                                  Icon(Icons.star_rate_rounded, color: heroes[index].rate!>3 ? Colors.purple : Colors.grey,),
-                                  Icon(Icons.star_rate_rounded, color: heroes[index].rate!>4 ? Colors.purple : Colors.grey,)
-                                ],
-                              ),
-                            ),
-                            ),
+                          const Text("Sort By Power"),
+                          Checkbox(
+                            value: sortByPower,
+                            onChanged: (value) {
+                              //formFieldState.didChange(value);
+                              setState(() {
+                                sortByPower = value!;
+                              });
+                            },
                           ),
                         ],
                       ),
                     ],
-                  ),
+                  ) : const SizedBox(),
+                ]  
                 ),
-              );
-            }
-          ),
-        ],
+              ),
+            ),
+             heroes.isNotEmpty ?
+            ListView.builder(
+              padding: const EdgeInsets.all(8),
+              itemCount: heroes.length,
+              itemBuilder: (BuildContext context, int index) {
+                return InkWell(
+                  onTap: () => Navigator.push( context, MaterialPageRoute( builder: (context) => HeroScreen( hero: heroes[index]) ), ),
+                  child: Card(
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(child: Container(
+                              decoration: const BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(
+                                    width: 3,
+                                  ),
+                                  left: BorderSide(
+                                    width: 1,
+                                  ),
+                                  right: BorderSide(
+                                    width: 1,
+                                  ),
+                                  top: BorderSide(
+                                    width: 1,
+                                  ),
+                                )
+                              ),
+                              child: const Text("Hero Name",
+                                      style: TextStyle(fontWeight: FontWeight.bold),
+                                    ),
+                              ),
+                            ),
+                            Expanded(child: Container(
+                              decoration: const BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(
+                                    width: 3,
+                                  ),
+                                  left: BorderSide(
+                                    width: 1,
+                                  ),
+                                  right: BorderSide(
+                                    width: 1,
+                                  ),
+                                  top: BorderSide(
+                                    width: 1,
+                                  ),
+                                )
+                              ),
+                              child: Text(heroes[index].name!,
+                                      style: const TextStyle(fontWeight: FontWeight.bold),
+                                    ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(child: Container(
+                              decoration: const BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(
+                                    width: 3,
+                                  ),
+                                  left: BorderSide(
+                                    width: 1,
+                                  ),
+                                  right: BorderSide(
+                                    width: 1,
+                                  ),
+                                  top: BorderSide(
+                                    width: 1,
+                                  ),
+                                )
+                              ),
+                              child: const Text("Powers",
+                                      style: TextStyle(fontWeight: FontWeight.bold),
+                                    ),
+                              ),
+                            ),
+                            Expanded(child: Container(
+                              decoration: const BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(
+                                    width: 3,
+                                  ),
+                                  left: BorderSide(
+                                    width: 1,
+                                  ),
+                                  right: BorderSide(
+                                    width: 1,
+                                  ),
+                                  top: BorderSide(
+                                    width: 1,
+                                  ),
+                                )
+                              ),
+                              child: Text(heroes[index].powers!,
+                                      style: const TextStyle(fontWeight: FontWeight.bold),
+                                    ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(child: Container(
+                              decoration: const BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(
+                                    width: 1,
+                                  ),
+                                  left: BorderSide(
+                                    width: 1,
+                                  ),
+                                  right: BorderSide(
+                                    width: 1,
+                                  ),
+                                  top: BorderSide(
+                                    width: 1,
+                                  ),
+                                )
+                              ),
+                              child: const Text("Rate",
+                                      style: TextStyle(fontWeight: FontWeight.bold),
+                                    ),
+                              ),
+                            ),
+                            Expanded(child: Container(
+                              decoration: const BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(
+                                    width: 1,
+                                  ),
+                                  left: BorderSide(
+                                    width: 1,
+                                  ),
+                                  right: BorderSide(
+                                    width: 1,
+                                  ),
+                                  top: BorderSide(
+                                    width: 1,
+                                  ),
+                                )
+                              ),
+                              child: SizedBox(
+                                width:100,
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.star_rate_rounded, color: heroes[index].rate!>0 ? Colors.purple : Colors.grey,),
+                                    Icon(Icons.star_rate_rounded, color: heroes[index].rate!>1 ? Colors.purple : Colors.grey,),
+                                    Icon(Icons.star_rate_rounded, color: heroes[index].rate!>2 ? Colors.purple : Colors.grey,),
+                                    Icon(Icons.star_rate_rounded, color: heroes[index].rate!>3 ? Colors.purple : Colors.grey,),
+                                    Icon(Icons.star_rate_rounded, color: heroes[index].rate!>4 ? Colors.purple : Colors.grey,)
+                                  ],
+                                ),
+                              ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }
+            ) : const Center(child: Text("no heroes!"),)
+          ],
+        ),
       ),
     );
   }
